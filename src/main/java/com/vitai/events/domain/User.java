@@ -1,12 +1,12 @@
 package com.vitai.events.domain;
 
+import com.vitai.events.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,20 +15,26 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Builder
-@Entity(name = "events")
-public class Event {
+@Entity(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     private String name;
-    private Instant date;
-    private String local;
-    private Integer maxCapacity;
+
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
 
     @Setter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "events")
-    private Set<User> users = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name ="event_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private Set<Event> events;
 
     @CreationTimestamp
     public Instant createdAt;
