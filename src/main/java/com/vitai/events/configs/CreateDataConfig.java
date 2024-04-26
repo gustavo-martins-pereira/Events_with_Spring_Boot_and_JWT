@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class CreateDataConfig implements CommandLineRunner {
 
     @Autowired

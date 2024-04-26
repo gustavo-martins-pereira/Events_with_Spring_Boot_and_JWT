@@ -5,23 +5,13 @@ import lombok.Getter;
 @Getter
 public enum UserRole {
 
-    ADMIN(1),
-    USER(2);
+    ADMIN("Admin"),
+    USER("User");
 
-    private final int code;
+    private String role;
 
-    private UserRole(int code) {
-        this.code = code;
-    }
-
-    public static UserRole valueOf(int code) {
-        for(UserRole value : UserRole.values()) {
-            if(value.getCode() == code) {
-                return value;
-            }
-        }
-
-        throw new IllegalArgumentException("Invalid UserRole code");
+    UserRole(String role) {
+        this.role = role;
     }
 
 }
