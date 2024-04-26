@@ -27,7 +27,7 @@ public class Event {
     private Integer maxCapacity;
 
     @Setter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "events")
+    @ManyToMany(mappedBy = "events")
     private Set<User> users = new HashSet<>();
 
     @CreationTimestamp
