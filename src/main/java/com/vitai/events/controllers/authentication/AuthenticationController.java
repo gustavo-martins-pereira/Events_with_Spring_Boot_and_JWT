@@ -1,9 +1,11 @@
 package com.vitai.events.controllers.authentication;
 
 import com.vitai.events.controllers.authentication.dtos.LoginDTO;
+import com.vitai.events.controllers.authentication.dtos.LoginResponseDTO;
 import com.vitai.events.controllers.authentication.dtos.RegisterDTO;
 import com.vitai.events.domain.User;
 import com.vitai.events.repositories.UserRepository;
+import com.vitai.events.utils.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @PostMapping("/login")
@@ -31,7 +36,9 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.login(), authenticationDTO.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
