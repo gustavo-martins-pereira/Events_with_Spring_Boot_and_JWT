@@ -1,4 +1,4 @@
-package com.vitai.events.usecases.event;
+package com.vitai.events.usecases.auth;
 
 import com.vitai.events.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
