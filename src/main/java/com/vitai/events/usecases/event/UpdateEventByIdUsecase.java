@@ -1,0 +1,31 @@
+package com.vitai.events.usecases.event;
+
+import com.vitai.events.domain.Event;
+import com.vitai.events.repositories.EventRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class UpdateEventByIdUsecase {
+
+    @Autowired
+    private EventRepository eventRepository;
+
+    public Event execute(UUID id, Event newEvent) {
+        Optional<Event> event = eventRepository.findById(id);
+        if(event.isEmpty()) return null;
+
+        Event existingEvent = event.get();
+
+        existingEvent.setName(newEvent.getName());
+        existingEvent.setDate(newEvent.getDate());
+        existingEvent.setLocal(newEvent.getLocal());
+        existingEvent.setMaxCapacity(newEvent.getMaxCapacity());
+
+        return eventRepository.save(existingEvent);
+    }
+
+}

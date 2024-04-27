@@ -5,6 +5,7 @@ import com.vitai.events.domain.Event;
 import com.vitai.events.usecases.event.CreateEventUsecase;
 import com.vitai.events.usecases.event.GetAllEventsUsecase;
 import com.vitai.events.usecases.event.GetEventByIdUsecase;
+import com.vitai.events.usecases.event.UpdateEventByIdUsecase;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class EventController {
     @Autowired
     private CreateEventUsecase createEventUsecase;
 
+    @Autowired
+    private UpdateEventByIdUsecase updateEventByIdUsecase;
+
     @GetMapping
     public ResponseEntity<List<EventDTO>> getAllEvents() {
         List<EventDTO> eventsDTO = getAllEventsUsecase.execute().stream().map(EventDTO::eventToDTO).toList();
@@ -48,6 +52,15 @@ public class EventController {
         Event createdEvent = createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Event> updateEventById(@PathVariable UUID id, @RequestBody @Valid EventDTO eventDTO) {
+        Event newEvent = EventDTO.dtoToEvent(eventDTO);
+
+        var event = updateEventByIdUsecase.execute(id, newEvent);
+
+        return ResponseEntity.ok(event);
     }
 
 }
