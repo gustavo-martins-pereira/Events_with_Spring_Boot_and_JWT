@@ -1,10 +1,15 @@
 package com.vitai.events.controllers.event.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vitai.events.domain.Event;
+import com.vitai.events.utils.annotations.FutureDate;
+import com.vitai.events.utils.serialization.CustomInstantDeserializer;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 
@@ -14,9 +19,23 @@ import java.time.Instant;
 @Builder
 public class EventDTO {
 
+    @NotNull(message = "The name of the event cannot be blank")
+    @NotBlank(message = "The name of the event cannot be blank")
+    @Size(min = 5, max = 30, message = "Event name length must be between 5 and 30 characters")
     private String name;
+
+    @NotNull(message = "The date of the event cannot be null")
+    @FutureDate
+    @JsonDeserialize(using = CustomInstantDeserializer.class)
     private Instant date;
+
+    @NotNull(message = "The local cannot be blank")
+    @NotBlank(message = "The local cannot be blank")
+    @Size(min = 3, max = 30, message = "Local length must be between 3 and 30 characters")
     private String local;
+
+    @NotNull(message = "The maxCapacity is required")
+    @Positive(message = "maxCapacity must be positive")
     private Integer maxCapacity;
 
     public static Event dtoToEvent(EventDTO eventDTO) {

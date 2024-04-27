@@ -5,6 +5,7 @@ import com.vitai.events.domain.Event;
 import com.vitai.events.usecases.event.CreateEventUsecase;
 import com.vitai.events.usecases.event.GetAllEventsUsecase;
 import com.vitai.events.usecases.event.GetEventByIdUsecase;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<Event> createEvent(@RequestBody @Valid EventDTO eventDTO) {
         Event createdEvent = createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
