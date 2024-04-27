@@ -19,6 +19,7 @@ public class RegisterUsecase {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
         User newUser = User.builder()
+                .name(registerDTO.name())
                 .login(registerDTO.login())
                 .password(encryptedPassword)
                 .role(registerDTO.role())

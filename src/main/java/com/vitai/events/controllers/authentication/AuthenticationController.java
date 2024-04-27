@@ -5,6 +5,7 @@ import com.vitai.events.controllers.authentication.dtos.RegisterDTO;
 import com.vitai.events.repositories.UserRepository;
 import com.vitai.events.usecases.auth.LoginUsecase;
 import com.vitai.events.usecases.auth.RegisterUsecase;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class AuthenticationController {
     private LoginUsecase loginUsecase;
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Validated RegisterDTO registerDTO) {
+    public ResponseEntity register(@RequestBody @Valid RegisterDTO registerDTO) {
         registerUsecase.execute(registerDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
