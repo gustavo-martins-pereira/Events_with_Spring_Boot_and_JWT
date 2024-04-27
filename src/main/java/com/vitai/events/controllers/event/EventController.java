@@ -1,6 +1,7 @@
 package com.vitai.events.controllers.event;
 
 import com.vitai.events.controllers.event.dtos.EventDTO;
+import com.vitai.events.controllers.event.dtos.SubscribeUserInEventDTO;
 import com.vitai.events.domain.Event;
 import com.vitai.events.usecases.event.*;
 import jakarta.validation.Valid;
@@ -25,6 +26,9 @@ public class EventController {
 
     @Autowired
     private CreateEventUsecase createEventUsecase;
+
+    @Autowired
+    private SubscribeInEventUsecase subscribeInEventUsecase;
 
     @Autowired
     private UpdateEventByIdUsecase updateEventByIdUsecase;
@@ -53,6 +57,11 @@ public class EventController {
         Event createdEvent = createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
+    }
+
+    @PostMapping(value = "/subscribe")
+    public ResponseEntity<Object> subscribeUserInEvent(@RequestBody @Valid SubscribeUserInEventDTO subscribeUserInEventDTO) {
+        return subscribeInEventUsecase.execute(UUID.fromString(subscribeUserInEventDTO.getEventId()), UUID.fromString(subscribeUserInEventDTO.getUserId()));
     }
 
     @PutMapping(value = "/{id}")
