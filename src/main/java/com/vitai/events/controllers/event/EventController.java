@@ -2,10 +2,7 @@ package com.vitai.events.controllers.event;
 
 import com.vitai.events.controllers.event.dtos.EventDTO;
 import com.vitai.events.domain.Event;
-import com.vitai.events.usecases.event.CreateEventUsecase;
-import com.vitai.events.usecases.event.GetAllEventsUsecase;
-import com.vitai.events.usecases.event.GetEventByIdUsecase;
-import com.vitai.events.usecases.event.UpdateEventByIdUsecase;
+import com.vitai.events.usecases.event.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -31,6 +29,9 @@ public class EventController {
     @Autowired
     private UpdateEventByIdUsecase updateEventByIdUsecase;
 
+    @Autowired
+    private DeleteEventByIdUsecase deleteEventByIdUsecase;
+
     @GetMapping
     public ResponseEntity<List<EventDTO>> getAllEvents() {
         List<EventDTO> eventsDTO = getAllEventsUsecase.execute().stream().map(EventDTO::eventToDTO).toList();
@@ -40,7 +41,7 @@ public class EventController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
-        var eventOptional = getEventByIdUsecase.execute(id);
+        Optional<Event> eventOptional = getEventByIdUsecase.execute(id);
 
         return eventOptional
                 .map(event -> ResponseEntity.ok(EventDTO.eventToDTO(event)))
@@ -57,10 +58,23 @@ public class EventController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<Event> updateEventById(@PathVariable UUID id, @RequestBody @Valid EventDTO eventDTO) {
         Event newEvent = EventDTO.dtoToEvent(eventDTO);
+        Optional<Event> optionalUpdatedEvent = updateEventByIdUsecase.execute(id, newEvent);
 
-        var event = updateEventByIdUsecase.execute(id, newEvent);
+        if (optionalUpdatedEvent.isEmpty()) return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(event);
+        Event updatedEvent = optionalUpdatedEvent.get();
+
+        return ResponseEntity.ok(updatedEvent);
+    }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Event> deleteEventById(@PathVariable UUID id) {
+        Optional<Event> optionalDeletedEvent = deleteEventByIdUsecase.execute(id);
+
+        if (optionalDeletedEvent.isEmpty()) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().build();
     }
 
 }

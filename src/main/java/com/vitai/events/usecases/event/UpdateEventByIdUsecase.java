@@ -14,18 +14,19 @@ public class UpdateEventByIdUsecase {
     @Autowired
     private EventRepository eventRepository;
 
-    public Event execute(UUID id, Event newEvent) {
-        Optional<Event> event = eventRepository.findById(id);
-        if(event.isEmpty()) return null;
+    public Optional<Event> execute(UUID id, Event newEvent) {
+        Optional<Event> optionalEvent = eventRepository.findById(id);
+        if (optionalEvent.isEmpty()) return Optional.empty();
 
-        Event existingEvent = event.get();
+        Event existingEvent = optionalEvent.get();
 
         existingEvent.setName(newEvent.getName());
         existingEvent.setDate(newEvent.getDate());
         existingEvent.setLocal(newEvent.getLocal());
         existingEvent.setMaxCapacity(newEvent.getMaxCapacity());
 
-        return eventRepository.save(existingEvent);
-    }
+        Event updatedEvent = eventRepository.save(existingEvent);
 
+        return Optional.of(updatedEvent);
+    }
 }

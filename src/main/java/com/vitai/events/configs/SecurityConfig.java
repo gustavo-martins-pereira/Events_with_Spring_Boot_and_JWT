@@ -1,6 +1,5 @@
 package com.vitai.events.configs;
 
-import com.vitai.events.domain.enums.UserRole;
 import com.vitai.events.utils.security.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/events").permitAll()
                         .requestMatchers(HttpMethod.POST, "/events").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/events/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/events/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();
