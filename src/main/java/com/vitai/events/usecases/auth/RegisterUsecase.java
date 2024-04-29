@@ -15,7 +15,7 @@ public class RegisterUsecase {
     private UserRepository userRepository;
 
     public ResponseEntity<Object> execute(RegisterDTO registerDTO) {
-        if(this.userRepository.findByLogin(registerDTO.login()) != null) return ResponseEntity.badRequest().build();
+        if(this.userRepository.findByLogin(registerDTO.login()) != null) return ResponseEntity.badRequest().body("Username already exists");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
         User newUser = User.builder()

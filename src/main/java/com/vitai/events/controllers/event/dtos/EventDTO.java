@@ -1,5 +1,6 @@
 package com.vitai.events.controllers.event.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vitai.events.domain.Event;
 import com.vitai.events.utils.annotations.FutureDate;
@@ -9,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 
@@ -27,6 +27,7 @@ public class EventDTO {
     @NotNull(message = "The date of the event cannot be null")
     @FutureDate
     @JsonDeserialize(using = CustomInstantDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
     private Instant date;
 
     @NotNull(message = "The local cannot be blank")
