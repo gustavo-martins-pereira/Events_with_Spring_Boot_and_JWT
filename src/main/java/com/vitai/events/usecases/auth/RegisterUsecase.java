@@ -14,8 +14,8 @@ public class RegisterUsecase {
     @Autowired
     private UserRepository userRepository;
 
-    public void execute(RegisterDTO registerDTO) {
-        if(this.userRepository.findByLogin(registerDTO.login()) != null) ResponseEntity.badRequest().build();
+    public ResponseEntity<Object> execute(RegisterDTO registerDTO) {
+        if(this.userRepository.findByLogin(registerDTO.login()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
         User newUser = User.builder()
@@ -26,6 +26,8 @@ public class RegisterUsecase {
                 .build();
 
         this.userRepository.save(newUser);
+
+        return ResponseEntity.ok().build();
     }
 
 }
