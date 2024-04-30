@@ -48,7 +48,9 @@ public class AuthenticationController {
             }
     )
     public ResponseEntity<Object> register(@RequestBody @Valid RegisterDTO registerDTO) {
-        return registerUsecase.execute(registerDTO);
+        var test = registerUsecase.execute(registerDTO);
+
+        return test;
     }
 
     @PostMapping("/login")

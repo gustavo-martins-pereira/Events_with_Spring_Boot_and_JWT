@@ -4,6 +4,7 @@ import com.vitai.events.controllers.authentication.dtos.RegisterDTO;
 import com.vitai.events.domain.User;
 import com.vitai.events.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,19 @@ public class RegisterUsecase {
     private UserRepository userRepository;
 
     public ResponseEntity<Object> execute(RegisterDTO registerDTO) {
-        if(this.userRepository.findByLogin(registerDTO.login()) != null) return ResponseEntity.badRequest().body("Username already exists");
+        if(this.userRepository.findByLogin(registerDTO.getLogin()) != null) return ResponseEntity.badRequest().body("Username already exists");
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.getPassword());
         User newUser = User.builder()
-                .name(registerDTO.name())
-                .login(registerDTO.login())
+                .name(registerDTO.getName())
+                .login(registerDTO.getLogin())
                 .password(encryptedPassword)
-                .role(registerDTO.role())
+                .role(registerDTO.getRole())
                 .build();
 
         this.userRepository.save(newUser);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }
