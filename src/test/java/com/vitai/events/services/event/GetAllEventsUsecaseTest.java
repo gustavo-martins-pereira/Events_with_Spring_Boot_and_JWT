@@ -38,14 +38,15 @@ class GetAllEventsUsecaseTest {
     @Test
     @DisplayName("Should show a list of Events with code 200")
     void testGetAllEventsSuccess()  {
-        List<Event> events = Arrays.asList(new Event(), new Event(), new Event());
-        when(this.eventRepository.findAll()).thenReturn(events);
+        List<Event> eventsMock = Arrays.asList(new Event(), new Event(), new Event());
+        when(this.eventRepository.findAll()).thenReturn(eventsMock);
 
-        ResponseEntity<List<EventDTO>> response = this.getAllEventsUsecase.execute();
+        List<EventDTO> events = this.getAllEventsUsecase.execute();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertInstanceOf(List.class, response.getBody());
-        for(EventDTO eventDTO : Objects.requireNonNull(response.getBody())) {
+        assertNotNull(events);
+        assertFalse(events.isEmpty());
+
+        for (EventDTO eventDTO : events) {
             assertInstanceOf(EventDTO.class, eventDTO);
         }
     }

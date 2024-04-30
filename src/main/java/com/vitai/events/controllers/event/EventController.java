@@ -66,7 +66,9 @@ public class EventController {
             }
     )
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        return getAllEventsUsecase.execute();
+        List<EventDTO> eventsDTO = this.getAllEventsUsecase.execute();
+
+        return ResponseEntity.ok(eventsDTO);
     }
 
     @GetMapping(value = "/{id}")
