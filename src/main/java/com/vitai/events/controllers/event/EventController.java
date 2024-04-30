@@ -7,7 +7,6 @@ import com.vitai.events.usecases.event.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -67,9 +66,7 @@ public class EventController {
             }
     )
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        List<EventDTO> eventsDTO = getAllEventsUsecase.execute().stream().map(EventDTO::eventToDTO).toList();
-
-        return ResponseEntity.ok(eventsDTO);
+        return getAllEventsUsecase.execute();
     }
 
     @GetMapping(value = "/{id}")
