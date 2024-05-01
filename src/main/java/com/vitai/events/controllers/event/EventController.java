@@ -13,12 +13,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -66,9 +64,7 @@ public class EventController {
             }
     )
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        List<EventDTO> eventsDTO = this.getAllEventsUsecase.execute();
-
-        return ResponseEntity.ok(eventsDTO);
+        return this.getAllEventsUsecase.execute();
     }
 
     @GetMapping(value = "/{id}")
@@ -98,11 +94,7 @@ public class EventController {
             }
     )
     public ResponseEntity<EventDTO> getEventById(@PathVariable UUID id) {
-        Optional<Event> eventOptional = getEventByIdUsecase.execute(id);
-
-        return eventOptional
-                .map(event -> ResponseEntity.ok(EventDTO.eventToDTO(event)))
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        return this.getEventByIdUsecase.execute(id);
     }
 
     @PostMapping
@@ -127,9 +119,7 @@ public class EventController {
             }
     )
     public ResponseEntity<Event> createEvent(@RequestBody @Valid EventDTO eventDTO) {
-        Event createdEvent = createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
+        return this.createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
     }
 
     @PostMapping(value = "/subscribe")
@@ -161,7 +151,7 @@ public class EventController {
             }
     )
     public ResponseEntity<Object> subscribeUserInEvent(@RequestBody @Valid SubscribeUserInEventDTO subscribeUserInEventDTO) {
-        return subscribeInEventUsecase.execute(UUID.fromString(subscribeUserInEventDTO.getEventId()), UUID.fromString(subscribeUserInEventDTO.getUserId()));
+        return this.subscribeInEventUsecase.execute(UUID.fromString(subscribeUserInEventDTO.getEventId()), UUID.fromString(subscribeUserInEventDTO.getUserId()));
     }
 
     @PutMapping(value = "/{id}")
@@ -191,14 +181,7 @@ public class EventController {
             }
     )
     public ResponseEntity<Event> updateEventById(@PathVariable UUID id, @RequestBody @Valid EventDTO eventDTO) {
-        Event newEvent = EventDTO.dtoToEvent(eventDTO);
-        Optional<Event> optionalUpdatedEvent = updateEventByIdUsecase.execute(id, newEvent);
-
-        if (optionalUpdatedEvent.isEmpty()) return ResponseEntity.notFound().build();
-
-        Event updatedEvent = optionalUpdatedEvent.get();
-
-        return ResponseEntity.ok(updatedEvent);
+        return this.updateEventByIdUsecase.execute(id, EventDTO.dtoToEvent(eventDTO));
     }
 
     @DeleteMapping(value = "/{id}")
@@ -224,12 +207,8 @@ public class EventController {
                     )
             }
     )
-    public ResponseEntity<Event> deleteEventById(@PathVariable UUID id) {
-        Optional<Event> optionalDeletedEvent = deleteEventByIdUsecase.execute(id);
-
-        if (optionalDeletedEvent.isEmpty()) return ResponseEntity.notFound().build();
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteEventById(@PathVariable UUID id) {
+        return this.deleteEventByIdUsecase.execute(id);
     }
 
 }

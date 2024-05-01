@@ -28,7 +28,7 @@ public class RegisterUsecase {
 
         this.userRepository.save(newUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
 }

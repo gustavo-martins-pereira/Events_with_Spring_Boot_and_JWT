@@ -1,13 +1,8 @@
 package com.vitai.events.services.event;
 
-import com.vitai.events.controllers.authentication.dtos.RegisterDTO;
 import com.vitai.events.controllers.event.dtos.EventDTO;
 import com.vitai.events.domain.Event;
-import com.vitai.events.domain.User;
-import com.vitai.events.domain.enums.UserRole;
 import com.vitai.events.repositories.EventRepository;
-import com.vitai.events.repositories.UserRepository;
-import com.vitai.events.usecases.auth.RegisterUsecase;
 import com.vitai.events.usecases.event.CreateEventUsecase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -50,7 +45,10 @@ class CreateEventUsecaseTest {
 
         when(this.eventRepository.save(EventDTO.dtoToEvent(eventDTO))).thenReturn(new Event());
 
-        this.createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
+        ResponseEntity<Event> response = this.createEventUsecase.execute(EventDTO.dtoToEvent(eventDTO));
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertInstanceOf(Event.class, response.getBody());
 
         verify(this.eventRepository, times(1)).save(any(Event.class));
     }

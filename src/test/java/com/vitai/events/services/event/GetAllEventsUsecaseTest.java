@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GetAllEventsUsecaseTest {
@@ -41,13 +42,14 @@ class GetAllEventsUsecaseTest {
         List<Event> eventsMock = Arrays.asList(new Event(), new Event(), new Event());
         when(this.eventRepository.findAll()).thenReturn(eventsMock);
 
-        List<EventDTO> events = this.getAllEventsUsecase.execute();
+        ResponseEntity<List<EventDTO>> response = this.getAllEventsUsecase.execute();
 
-        assertNotNull(events);
-        assertFalse(events.isEmpty());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        for (EventDTO eventDTO : events) {
+        for (EventDTO eventDTO : Objects.requireNonNull(response.getBody())) {
             assertInstanceOf(EventDTO.class, eventDTO);
         }
+
+        verify(this.eventRepository, times(1)).findAll();
     }
 }

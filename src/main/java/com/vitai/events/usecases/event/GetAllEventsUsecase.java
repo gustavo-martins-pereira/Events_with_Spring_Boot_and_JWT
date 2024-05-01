@@ -14,9 +14,10 @@ public class GetAllEventsUsecase {
     @Autowired
     private EventRepository eventRepository;
 
-    public List<EventDTO> execute() {
-        return this.eventRepository.findAll().stream().map(EventDTO::eventToDTO).toList();
+    public ResponseEntity<List<EventDTO>> execute() {
+        List<EventDTO> events = this.eventRepository.findAll().stream().map(EventDTO::eventToDTO).toList();
 
+        return ResponseEntity.ok(events);
     }
 
 }

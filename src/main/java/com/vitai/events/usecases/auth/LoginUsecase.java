@@ -26,7 +26,7 @@ public class LoginUsecase {
             var usernamePassword = new UsernamePasswordAuthenticationToken(loginDTO.login(), loginDTO.password());
             Authentication auth = this.authenticationManager.authenticate(usernamePassword);
 
-            var token = tokenService.generateToken((User) auth.getPrincipal());
+            var token = this.tokenService.generateToken((User) auth.getPrincipal());
 
             return ResponseEntity.ok(new LoginResponseDTO(token));
         } catch (Exception exception) {

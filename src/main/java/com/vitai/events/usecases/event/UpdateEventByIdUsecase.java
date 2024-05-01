@@ -3,6 +3,7 @@ package com.vitai.events.usecases.event;
 import com.vitai.events.domain.Event;
 import com.vitai.events.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,9 +15,9 @@ public class UpdateEventByIdUsecase {
     @Autowired
     private EventRepository eventRepository;
 
-    public Optional<Event> execute(UUID id, Event newEvent) {
-        Optional<Event> optionalEvent = eventRepository.findById(id);
-        if (optionalEvent.isEmpty()) return Optional.empty();
+    public ResponseEntity<Event> execute(UUID id, Event newEvent) {
+        Optional<Event> optionalEvent = this.eventRepository.findById(id);
+        if (optionalEvent.isEmpty()) return ResponseEntity.notFound().build();
 
         Event existingEvent = optionalEvent.get();
 
@@ -25,8 +26,8 @@ public class UpdateEventByIdUsecase {
         existingEvent.setLocal(newEvent.getLocal());
         existingEvent.setMaxCapacity(newEvent.getMaxCapacity());
 
-        Event updatedEvent = eventRepository.save(existingEvent);
+        Event updatedEvent = this.eventRepository.save(existingEvent);
 
-        return Optional.of(updatedEvent);
+        return ResponseEntity.ok(updatedEvent);
     }
 }

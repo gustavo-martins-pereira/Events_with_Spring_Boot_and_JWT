@@ -48,9 +48,7 @@ public class AuthenticationController {
             }
     )
     public ResponseEntity<Object> register(@RequestBody @Valid RegisterDTO registerDTO) {
-        var test = registerUsecase.execute(registerDTO);
-
-        return test;
+        return this.registerUsecase.execute(registerDTO);
     }
 
     @PostMapping("/login")
@@ -70,7 +68,7 @@ public class AuthenticationController {
             }
     )
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Validated LoginDTO loginDTO) {
-        return loginUsecase.execute(loginDTO);
+        return this.loginUsecase.execute(loginDTO);
     }
 
 }

@@ -19,7 +19,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GetEventByIdUsecaseTest {
@@ -42,12 +42,12 @@ class GetEventByIdUsecaseTest {
         event.setId(UUID.randomUUID());
         when(this.eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 
-        ResponseEntity<EventDTO> response = this.getEventByIdUsecase.execute(event.getId())
-                .map(optionalEvent -> ResponseEntity.ok(EventDTO.eventToDTO(optionalEvent)))
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        ResponseEntity<EventDTO> response = this.getEventByIdUsecase.execute(event.getId());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertInstanceOf(EventDTO.class, response.getBody());
+
+        verify(this.eventRepository, times(1)).findById(any());
     }
 
     @Test
@@ -56,10 +56,10 @@ class GetEventByIdUsecaseTest {
         UUID id = UUID.randomUUID();
         when(this.eventRepository.findById(id)).thenReturn(Optional.empty());
 
-        ResponseEntity<EventDTO> response = this.getEventByIdUsecase.execute(id)
-                .map(optionalEvent -> ResponseEntity.ok(EventDTO.eventToDTO(optionalEvent)))
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        ResponseEntity<EventDTO> response = this.getEventByIdUsecase.execute(id);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+
+        verify(this.eventRepository, times(1)).findById(any());
     }
 }

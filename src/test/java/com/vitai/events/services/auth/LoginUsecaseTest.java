@@ -12,15 +12,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@Profile("test")
 class LoginUsecaseTest {
 
     @Mock
@@ -57,7 +61,7 @@ class LoginUsecaseTest {
         ResponseEntity<LoginResponseDTO> responseEntity = loginUsecase.execute(loginDTO);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(token, responseEntity.getBody().token());
+        assertEquals(token, Objects.requireNonNull(responseEntity.getBody()).token());
     }
 
     @Test
