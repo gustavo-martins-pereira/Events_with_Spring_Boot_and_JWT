@@ -26,7 +26,7 @@ public class SubscribeInEventUsecase {
         Optional<Event> optionalEvent = eventRepository.findById(eventId);
 
         if (existingUser.isEmpty() || optionalEvent.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or Event not found");
         }
 
         User user = existingUser.get();
